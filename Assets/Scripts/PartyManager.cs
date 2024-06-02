@@ -37,6 +37,8 @@ public class PartyManager : MonoBehaviour
                 newPartyMember.Strength = allMembers[i].BaseStr;
                 newPartyMember.Speed = allMembers[i].BaseSpeed;
                 newPartyMember.MemberOverworldVisualPrefab = allMembers[i].MemberOverworldVisualPrefab;
+                
+                currentParty.Add(newPartyMember);
             }
         }
     }
