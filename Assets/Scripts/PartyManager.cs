@@ -5,30 +5,52 @@ using UnityEngine;
 public class PartyManager : MonoBehaviour
 {
 
-    // TODO: Add later on for allMembers
-    //[SerializeField] private PartyMemberInfo[] allMembers;
+    [SerializeField] private PartyMemberInfo[] allMembers;
     [SerializeField] private List<PartyMember> currentParty;
-    // TODO: add later for setting the party member
-    //[SerializeField] private PartyMemberInfo defaulPartyMember;
+    [SerializeField] private PartyMemberInfo defaultPartyMember;
 
     private Vector3 playerPosition;
+    private static GameObject instance;
+
+    private void Awake()
+    {
+        if(instance!=null){
+            Destroy(this.gameObject);
+        } else {
+            instance = this.gameObject;
+            AddMemberToPartyByName(defaultPartyMember.MemberName);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
 
     public void AddMemberToPartyByName(string memberName)
     {
-
+        for (int i = 0; i < allMembers.Length; i++)
+        {
+            if (allMembers[i].MemberName == memberName)
+            {   
+                PartyMember newPartyMember = new PartyMember();
+                newPartyMember.MemberName = allMembers[i].MemberName;
+                newPartyMember.Level = allMembers[i].StartingLevel;
+                newPartyMember.CurrHealth = allMembers[i].BaseHealth;
+                newPartyMember.MaxHealth = newPartyMember.CurrHealth;
+                newPartyMember.Strength = allMembers[i].BaseStr;
+                newPartyMember.Speed = allMembers[i].BaseSpeed;
+                newPartyMember.MemberOverworldVisualPrefab = allMembers[i].MemberOverworldVisualPrefab;
+            }
+        }
     }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
+    public void SaveHealth(int partyMember, int health){
+        currentParty[partyMember].CurrHealth = health;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    public void SetCurrentPosition(Vector3 position){
+        playerPosition = position;
+    }
 
+    public Vector3 GetPosition(){
+        return playerPosition;
     }
 }
 
@@ -37,9 +59,12 @@ public class PartyManager : MonoBehaviour
 public class PartyMember
 {
     public string MemberName;
-    public int StartingLevel;
-    public int BaseHealth;
-    public int BaseStr;
-    public int BaseSpeed;
-    public GameObject MemberOverworldVisualPrefab; // Displayed in overworld scene
+    public int Level;
+    public int CurrHealth;
+    public int MaxHealth;
+    public int Strength;
+    public int Speed;
+    public int CurrExp;
+    public int MaxExp;
+    public GameObject MemberOverworldVisualPrefab;
 }
